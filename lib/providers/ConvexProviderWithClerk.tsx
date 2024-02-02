@@ -1,8 +1,9 @@
 "use client";
 import React, { ReactNode } from "react";
-import { ClerkProvider, useAuth } from "@clerk/clerk-react";
+import { ClerkProvider, useAuth } from "@clerk/nextjs";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
-import { ConvexReactClient } from "convex/react";
+import { ConvexReactClient, AuthLoading, Authenticated } from "convex/react";
+import Loading from "@/components/ui/app/Loading/Loading";
 
 const convex = new ConvexReactClient(
   process.env.NEXT_PUBLIC_CONVEX_URL as string
@@ -11,11 +12,12 @@ const convex = new ConvexReactClient(
 const ConvexProviderWithClerkProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => (
-  <ClerkProvider
-    publishableKey={process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY!}
-  >
+  <ClerkProvider>
     <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-      {children}
+      <Authenticated>{children}</Authenticated>
+      <AuthLoading>
+        <Loading />
+      </AuthLoading>
     </ConvexProviderWithClerk>
   </ClerkProvider>
 );

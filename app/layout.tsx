@@ -19,7 +19,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bg-neutral-300`}>
         <ConvexProviderWithClerkProvider>
-          {children}
+          <main className="h-full">{children}</main>
         </ConvexProviderWithClerkProvider>
       </body>
     </html>
