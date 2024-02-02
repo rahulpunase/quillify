@@ -4,10 +4,10 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Logo from "@/components/ui/app/Logo";
 import { LogIn } from "lucide-react";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, UserButton } from "@clerk/nextjs";
 
 const Header = () => {
-  const { isSignedIn } = useAuth();
+  const { isSignedIn, signOut } = useAuth();
   return (
     <header className="w-full h-[80px] bg-zinc-50 flex justify-center">
       <div className="flex w-[1024px]  items-center">
@@ -32,11 +32,14 @@ const Header = () => {
             </Button>
           )}
           {isSignedIn && (
-            <Button className="" asChild>
-              <Link href="/dashboard">
-                Dashboard <LogIn className="ml-1 w-4 h-4" />
-              </Link>
-            </Button>
+            <div className="flex gap-x-4">
+              <Button className="" asChild>
+                <Link href="/dashboard">
+                  Dashboard <LogIn className="ml-1 w-4 h-4" />
+                </Link>
+              </Button>
+              <UserButton afterSignOutUrl="/" />
+            </div>
           )}
         </div>
       </div>

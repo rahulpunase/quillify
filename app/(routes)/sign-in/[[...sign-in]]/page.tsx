@@ -9,7 +9,7 @@ const SignInPage = () => {
       <div className="flex flex-row">
         <WelcomeSection />
         <div>
-          <SignIn appearance={{}} />
+          <SignIn />
         </div>
       </div>
     </div>

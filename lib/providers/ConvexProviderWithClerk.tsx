@@ -14,7 +14,7 @@ const ConvexProviderWithClerkProvider: React.FC<{ children: ReactNode }> = ({
 }) => (
   <ClerkProvider>
     <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
-      <Authenticated>{children}</Authenticated>
+      {children}
       <AuthLoading>
         <Loading />
       </AuthLoading>
