@@ -2,8 +2,13 @@ import type { Metadata } from "next";
 import { Open_Sans } from "next/font/google";
 import "./globals.css";
 import ConvexProviderWithClerkProvider from "@/lib/providers/ConvexProviderWithClerk";
+import { Toaster } from "@/components/ui/sonner";
+import AuthenticateAndCreateUser from "@/components/ui/app/AuthenticateAndCreateUser";
 
-const inter = Open_Sans({ preload: false, weight: "400" });
+const inter = Open_Sans({
+  preload: false,
+  weight: ["300", "400", "500", "600", "700", "800"],
+});
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -17,9 +22,14 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" type="image/x-icon" href="/quillify-logo.png" />
+      </head>
       <body className={`${inter.className} bg-neutral-300`}>
         <ConvexProviderWithClerkProvider>
+          <AuthenticateAndCreateUser />
           <main className="h-full">{children}</main>
+          <Toaster />
         </ConvexProviderWithClerkProvider>
       </body>
     </html>

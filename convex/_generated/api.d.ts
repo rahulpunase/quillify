@@ -14,7 +14,13 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
-import type * as query from "../query.js";
+import type * as boards_mutation from "../boards/mutation.js";
+import type * as boards_query from "../boards/query.js";
+import type * as members_mutation from "../members/mutation.js";
+import type * as members_query from "../members/query.js";
+import type * as organization_mutation from "../organization/mutation.js";
+import type * as organization_query from "../organization/query.js";
+import type * as users_mutation from "../users/mutation.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -25,7 +31,13 @@ import type * as query from "../query.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
-  query: typeof query;
+  "boards/mutation": typeof boards_mutation;
+  "boards/query": typeof boards_query;
+  "members/mutation": typeof members_mutation;
+  "members/query": typeof members_query;
+  "organization/mutation": typeof organization_mutation;
+  "organization/query": typeof organization_query;
+  "users/mutation": typeof users_mutation;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,
