@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 const InviteUserPopup = () => {
-  const { model, setOpenModal } = useModalStore();
+  const { setOpenModal } = useModalStore();
   const { selectedOrgId } = useOrganizationStore();
   const [inviteUrl, setInviteUrl] = useState("");
   const [isLinkCopied, setIsLinkCopied] = useState(false);

@@ -8,6 +8,7 @@ import NewBoardButton from "../NewBoardButton";
 import BoardCardList from "../BoardCardsList";
 import useDashboardStore from "@/store/dashboard";
 import { cn } from "@/lib/utils";
+import { Id } from "@/convex/_generated/dataModel";
 
 const BoardContainer = ({ view }: { view: "card" | "list" }) => {
   const { selectedOrgId } = useOrganizationStore();
@@ -15,7 +16,7 @@ const BoardContainer = ({ view }: { view: "card" | "list" }) => {
     useDashboardStore();
 
   const boards = useQuery(api.boards.query.getAll, {
-    orgId: selectedOrgId,
+    orgId: selectedOrgId as Id<"organizations">,
     filterByStarred: selectedBoardType === "starred",
     searchField: searchQuery,
   });

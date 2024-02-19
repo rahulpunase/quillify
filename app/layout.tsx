@@ -4,6 +4,7 @@ import "./globals.css";
 import ConvexProviderWithClerkProvider from "@/lib/providers/ConvexProviderWithClerk";
 import { Toaster } from "@/components/ui/sonner";
 import AuthenticateAndCreateUser from "@/components/ui/app/AuthenticateAndCreateUser";
+import { Suspense } from "react";
 
 const inter = Open_Sans({
   preload: false,
@@ -26,11 +27,13 @@ export default function RootLayout({
         <link rel="icon" type="image/x-icon" href="/quillify-logo.png" />
       </head>
       <body className={`${inter.className} bg-neutral-300`}>
-        <ConvexProviderWithClerkProvider>
-          <AuthenticateAndCreateUser />
-          <main className="h-full">{children}</main>
-          <Toaster />
-        </ConvexProviderWithClerkProvider>
+        <Suspense>
+          <ConvexProviderWithClerkProvider>
+            <AuthenticateAndCreateUser />
+            <main className="h-full">{children}</main>
+            <Toaster />
+          </ConvexProviderWithClerkProvider>
+        </Suspense>
       </body>
     </html>
   );

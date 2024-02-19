@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { TooltipWrapper } from "@/components/ui/tooltip";
 import { useHistory, useCanRedo, useCanUndo } from "@/liveblocks.config";
-import useCanvasStore, { CanvasSelectedMode, Layer } from "@/store/canvas";
+import useCanvasStore, { CanvasSelectedMode, LayerType } from "@/store/canvas";
 import {
   Circle,
   LucideIcon,
@@ -76,14 +76,14 @@ const Toolbar = () => {
           label="Text"
           isActive={
             state.mode === CanvasSelectedMode.Inserting &&
-            state.layerType === Layer.Text
+            state.layerType === LayerType.Text
           }
           isDisabled={false}
           Icon={Type}
           onClick={() =>
             setCanvasState({
               mode: CanvasSelectedMode.Inserting,
-              layerType: Layer.Text,
+              layerType: LayerType.Text,
             })
           }
         />
@@ -91,14 +91,14 @@ const Toolbar = () => {
           label="Sticky Note"
           isActive={
             state.mode === CanvasSelectedMode.Inserting &&
-            state.layerType === Layer.Note
+            state.layerType === LayerType.Note
           }
           isDisabled={false}
           Icon={StickyNote}
           onClick={() =>
             setCanvasState({
               mode: CanvasSelectedMode.Inserting,
-              layerType: Layer.Note,
+              layerType: LayerType.Note,
             })
           }
         />
@@ -106,14 +106,14 @@ const Toolbar = () => {
           label="Square"
           isActive={
             state.mode === CanvasSelectedMode.Inserting &&
-            state.layerType === Layer.Rectangle
+            state.layerType === LayerType.Rectangle
           }
           isDisabled={false}
           Icon={Square}
           onClick={() =>
             setCanvasState({
               mode: CanvasSelectedMode.Inserting,
-              layerType: Layer.Rectangle,
+              layerType: LayerType.Rectangle,
             })
           }
         />
@@ -121,14 +121,14 @@ const Toolbar = () => {
           label="Circle"
           isActive={
             state.mode === CanvasSelectedMode.Inserting &&
-            state.layerType === Layer.Ellipse
+            state.layerType === LayerType.Ellipse
           }
           isDisabled={false}
           Icon={Circle}
           onClick={() =>
             setCanvasState({
               mode: CanvasSelectedMode.Inserting,
-              layerType: Layer.Ellipse,
+              layerType: LayerType.Ellipse,
             })
           }
         />
