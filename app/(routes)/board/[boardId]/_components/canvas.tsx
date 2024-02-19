@@ -25,7 +25,14 @@ const Canvas = ({ boardId }: CanvasProps) => {
       { storage, setMyPresence },
       possibleLayers: PossibleLayers,
       position: Point
-    ) => {},
+    ) => {
+      const liveLayers = storage.get("layers");
+      if (liveLayers.size >= MAX_LAYERS) {
+        return;
+      }
+
+      const liveLayerIds = storage.get("layerIds");
+    },
     []
   );
 
