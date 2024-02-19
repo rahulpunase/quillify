@@ -1,5 +1,5 @@
 import React from "react";
-import Canvas from "./_components/canvas";
+import Canvas from "./_components/Canvas";
 import Room from "./_components/Room";
 
 type BoardPageProps = {
