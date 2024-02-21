@@ -11,13 +11,20 @@ export type Camera = {
   y: number;
 };
 
-export enum LayerType {
+export enum ToolSelectedType {
   Rectangle,
   Ellipse,
   Path,
   Text,
   Note,
 }
+
+export type AllToolsType =
+  | ToolSelectedType.Rectangle
+  | ToolSelectedType.Ellipse
+  | ToolSelectedType.Note
+  | ToolSelectedType.Path
+  | ToolSelectedType.Text;
 
 export enum CanvasSelectedMode {
   None,
@@ -30,7 +37,7 @@ export enum CanvasSelectedMode {
 }
 
 export type RectangleLayer = {
-  type: LayerType.Rectangle;
+  type: ToolSelectedType.Rectangle;
   x: number;
   y: number;
   height: number;
@@ -40,7 +47,7 @@ export type RectangleLayer = {
 };
 
 export type EllipseLayer = {
-  type: LayerType.Ellipse;
+  type: ToolSelectedType.Ellipse;
   x: number;
   y: number;
   height: number;
@@ -50,7 +57,7 @@ export type EllipseLayer = {
 };
 
 export type PathLayer = {
-  type: LayerType.Ellipse;
+  type: ToolSelectedType.Path;
   x: number;
   y: number;
   height: number;
@@ -80,7 +87,7 @@ export enum Side {
 }
 
 export type TextLayer = {
-  type: LayerType.Text;
+  type: ToolSelectedType.Text;
   x: number;
   y: number;
   height: number;
@@ -90,7 +97,7 @@ export type TextLayer = {
 };
 
 export type NoteLayer = {
-  type: LayerType.Note;
+  type: ToolSelectedType.Note;
   x: number;
   y: number;
   height: number;
@@ -99,11 +106,11 @@ export type NoteLayer = {
   value?: string;
 };
 
-export type PossibleLayers =
-  | LayerType.Ellipse
-  | LayerType.Rectangle
-  | LayerType.Text
-  | LayerType.Note;
+export type PossibleTools =
+  | ToolSelectedType.Ellipse
+  | ToolSelectedType.Rectangle
+  | ToolSelectedType.Text
+  | ToolSelectedType.Note;
 
 type CanvasState =
   | {
@@ -117,7 +124,7 @@ type CanvasState =
   | {
       mode: CanvasSelectedMode.Translating;
       current: Point;
-      layerType: PossibleLayers;
+      toolSelectedType: PossibleTools;
     }
   | {
       mode: CanvasSelectedMode.Pressing;
@@ -130,7 +137,7 @@ type CanvasState =
     }
   | {
       mode: CanvasSelectedMode.Inserting;
-      layerType: PossibleLayers;
+      toolSelectedType: PossibleTools;
     }
   | {
       mode: CanvasSelectedMode.Pencil;
@@ -145,14 +152,17 @@ type CanvasStore = {
 
   lastColor: Color;
   setLastColor: (color: Color) => void;
+
+  dimension: Dimension;
+  setDimension: () => void;
 };
 
-export type Layers =
-  | RectangleLayer
-  | EllipseLayer
-  | PathLayer
-  | TextLayer
-  | NoteLayer;
+export type Layer = RectangleLayer | EllipseLayer | TextLayer | NoteLayer;
+
+export type Dimension = {
+  height: number;
+  width: number;
+};
 
 const useCanvasStore = create<CanvasStore>()((set) => ({
   state: {
@@ -178,6 +188,18 @@ const useCanvasStore = create<CanvasStore>()((set) => ({
   setLastColor: (color: Color) =>
     set(() => ({
       lastColor: color,
+    })),
+
+  dimension: {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  },
+  setDimension: () =>
+    set(() => ({
+      dimension: {
+        width: window.innerWidth,
+        height: window.innerHeight,
+      },
     })),
 }));
 

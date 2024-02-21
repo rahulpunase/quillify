@@ -27,7 +27,6 @@ const ConvexProviderWithClerkProvider: React.FC<{ children: ReactNode }> = ({
         <AuthLoading>
           <Loading />
         </AuthLoading>
-        {/* <Loading /> */}
       </ConvexProviderWithClerk>
     </ClerkProvider>
   );

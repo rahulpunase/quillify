@@ -27,7 +27,7 @@ export default function RootLayout({
         <link rel="icon" type="image/x-icon" href="/quillify-logo.png" />
       </head>
       <body className={`${inter.className} bg-neutral-300`}>
-        <Suspense>
+        <Suspense fallback="Loading">
           <ConvexProviderWithClerkProvider>
             <AuthenticateAndCreateUser />
             <main className="h-full">{children}</main>

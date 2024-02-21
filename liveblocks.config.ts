@@ -5,9 +5,12 @@ import {
   LiveObject,
 } from "@liveblocks/client";
 import { createRoomContext } from "@liveblocks/react";
-import { Layers } from "./store/canvas";
+import { Layer, LayerId } from "./components/ui/app/KonvaCanvas/types";
 
-const orgId = new URL(window.location.href).searchParams.get("orgId");
+let orgId = "";
+if (window !== undefined) {
+  orgId = new URL(window.location.href).searchParams.get("orgId");
+}
 
 const client = createClient({
   throttle: 16,
@@ -19,6 +22,7 @@ const client = createClient({
 // `user.presence` property. Must be JSON-serializable.
 type Presence = {
   cursor: { x: number; y: number } | null;
+  selection: string[];
   // ...
 };
 
@@ -29,8 +33,11 @@ type Presence = {
 type Storage = {
   // author: LiveObject<{ firstName: string, lastName: string }>,
   // ...
-  layers: LiveMap<string, LiveObject<Layers>>;
-  layerIds: LiveList<string>;
+  layers: LiveMap<LayerId, LiveObject<Layer>>;
+  layerIds: LiveList<LayerId>;
+  selectedLayerMap: LiveObject<{
+    id: LayerId;
+  }>;
 };
 
 // Optionally, UserMeta represents static/readonly metadata on each user, as

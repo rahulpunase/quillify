@@ -3,9 +3,8 @@
 import React, { PropsWithChildren } from "react";
 import { RoomProvider } from "@/liveblocks.config";
 import { ClientSideSuspense } from "@liveblocks/react";
-import Loading from "./Loading";
 import { LiveMap, LiveObject, LiveList } from "@liveblocks/client";
-import { Layers } from "@/store/canvas";
+import { LayerId, Layer } from "@/components/ui/app/KonvaCanvas/types";
 
 const Room: React.FC<PropsWithChildren & { roomId: string }> = ({
   children,
@@ -16,13 +15,19 @@ const Room: React.FC<PropsWithChildren & { roomId: string }> = ({
       id={roomId}
       initialPresence={{
         cursor: null,
+        selection: [],
       }}
-      initialStorage={{
-        layers: new LiveMap<string, LiveObject<Layers>>(),
-        layerIds: new LiveList(),
+      initialStorage={() => {
+        return {
+          layers: new LiveMap<LayerId, LiveObject<Layer>>(),
+          layerIds: new LiveList<LayerId>(),
+          selectedLayerMap: new LiveObject(),
+        };
       }}
     >
-      <ClientSideSuspense fallback={<Loading />}>
+      <ClientSideSuspense
+        fallback={<div className="flex w-full h-full">Loading</div>}
+      >
         {() => children}
       </ClientSideSuspense>
     </RoomProvider>

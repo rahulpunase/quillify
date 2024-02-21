@@ -1,6 +1,9 @@
-import React from "react";
+"use client";
+
+import React, { Suspense } from "react";
 import Room from "./_components/Room";
-import Canvas from "./_components/Canvas";
+import dynamic from "next/dynamic";
+import BoardSkeleton from "./_components/BoardSkeleton";
 
 type BoardPageProps = {
   params: {
@@ -8,11 +11,23 @@ type BoardPageProps = {
   };
 };
 
+const NoSSRCanvas = dynamic(
+  () => import("../../../../components/ui/app/KonvaCanvas/AppCanvas"),
+  {
+    ssr: false,
+    loading: () => (
+      <div>
+        <BoardSkeleton />
+      </div>
+    ),
+  }
+);
+
 const BoardPage = ({ params }: BoardPageProps) => {
   return (
-    <div className="h-full w-full relative bg-neutral-100 touch-none">
+    <div className="h-full w-full relative touch-none">
       <Room roomId={params.boardId}>
-        <Canvas boardId={params.boardId} />
+        <NoSSRCanvas boardId={params.boardId} />
       </Room>
     </div>
   );
