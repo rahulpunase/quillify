@@ -1,18 +1,16 @@
 import { useHistory, useMutation } from "@/liveblocks.config";
-import { pointerEventToCanvasPoint } from "../utils";
+import { drawShape, getColor, pointerEventToCanvasPoint } from "../utils";
 import { KonvaEventObject } from "konva/lib/Node";
-import useCanvasStore, {
-  CanvasSelectedMode,
-  Point,
-  ToolSelectedType,
-} from "@/store/canvas";
+import useCanvasStore from "@/store/canvas";
 import { nanoid } from "nanoid";
 import { LiveObject } from "@liveblocks/client";
-import { Layer, Shape } from "../types";
+import { Layer, Point, SelectedShapeType, Shape } from "../types";
+import useListeners from "./useListeners";
 
 const useInitiateKonva = () => {
-  const { state, camera, lastColor, setCanvasState } = useCanvasStore();
+  const { camera, lastColor } = useCanvasStore();
   const history = useHistory();
+  const { selectedShape } = useCanvasStore();
 
   const onPointerMove = useMutation(
     ({ setMyPresence }, e: KonvaEventObject<PointerEvent>) => {
@@ -32,11 +30,7 @@ const useInitiateKonva = () => {
   const insertLayer = useMutation(
     (
       { storage, setMyPresence },
-      toolSelectedType:
-        | ToolSelectedType.Rectangle
-        | ToolSelectedType.Ellipse
-        | ToolSelectedType.Note
-        | ToolSelectedType.Text,
+      selectedOptionType: SelectedShapeType,
       position: Point
     ) => {
       const selectedLayerMap = storage.get("selectedLayerMap");
@@ -47,29 +41,13 @@ const useInitiateKonva = () => {
         // create a new layer and the shape to it.
         layerIds.push("DEFAULT");
         selectedLayerMap.set("id", "DEFAULT");
-        const shapeId = nanoid();
-        const shape: Shape<"Rectangle"> = {
-          id: shapeId,
-          type: "Rectangle",
-          config: {
-            x: position.x,
-            y: position.y,
-            fill: {
-              r: 0,
-              b: 0,
-              g: 0,
-            },
-            height: 100,
-            width: 100,
-            isDraggable: true,
-            isDragging: false,
-            stroke: {
-              r: 0,
-              b: 0,
-              g: 0,
-            },
-          },
-        };
+        const shape = drawShape(
+          selectedOptionType,
+          position,
+          getColor(0, 0, 0),
+          getColor(0, 0, 0)
+        );
+        if (!shape) return;
         layers.set(
           "DEFAULT",
           new LiveObject({
@@ -78,7 +56,6 @@ const useInitiateKonva = () => {
             isVisible: true,
           })
         );
-
         return;
       }
 
@@ -88,9 +65,9 @@ const useInitiateKonva = () => {
       // }
 
       // setMyPresence({ selection: [selectedLayerId] }, { addToHistory: true });
-      setCanvasState({
-        mode: CanvasSelectedMode.None,
-      });
+      // setCanvasState({
+      //   mode: CanvasSelectedMode.None,
+      // });
     },
     [lastColor]
   );
@@ -98,19 +75,27 @@ const useInitiateKonva = () => {
   const onPointerUp = useMutation(
     ({}, e) => {
       const point = pointerEventToCanvasPoint(e.evt, camera);
-      if (state.mode === CanvasSelectedMode.Inserting) {
-        insertLayer(state.toolSelectedType, point);
-      } else {
-        setCanvasState({
-          mode: CanvasSelectedMode.None,
-        });
-      }
+      // if (state.mode === CanvasSelectedMode.Inserting) {
+      //   insertLayer(state.toolSelectedType, point);
+      // } else {
+      //   setCanvasState({
+      //     mode: CanvasSelectedMode.None,
+      //   });
+      // }
+      // insertLayer(selectedShape, point);
       history.resume();
     },
-    [camera, state, history]
+    [camera, history]
   );
 
-  return [onPointerMove, onPointerUp] as const;
+  useListeners((attach) => {
+    attach("onPointerUp", (e: KonvaEventObject<PointerEvent>) => {
+      // const point = pointerEventToCanvasPoint(e.evt, camera);
+      // insertLayer(e);
+      onPointerUp(e);
+    });
+    attach("onPointerMove", onPointerMove);
+  });
 };
 
 export default useInitiateKonva;

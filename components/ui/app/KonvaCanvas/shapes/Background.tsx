@@ -1,11 +1,12 @@
 import useCanvasStore from "@/store/canvas";
 import React, { memo } from "react";
-import { Layer, Rect, Line, Text } from "react-konva";
+import { Layer, Rect } from "react-konva";
 
 const DISTANCE = 100;
 
-const Background = memo(({ stage }) => {
+const Background = memo(() => {
   const { dimension, camera } = useCanvasStore();
+
   const gridBox = [];
   const rowBoxes = Math.floor((dimension.width * 2) / DISTANCE);
   const columnBoxes = Math.floor((dimension.height * 2) / DISTANCE);
@@ -21,8 +22,9 @@ const Background = memo(({ stage }) => {
           y={i * DISTANCE}
           height={DISTANCE}
           width={DISTANCE}
-          stroke="#ababab"
-          strokeWidth={j % 4 === 0 && i % 4 === 0 ? 2 : 1}
+          stroke="#bdbbbb"
+          strokeWidth={2}
+          cornerRadius={4}
         />
       );
     }

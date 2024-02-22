@@ -3,6 +3,11 @@ export type LayerId = string;
 
 export type MetaShapeType = "Rectangle" | "Circle" | "Text" | "Path";
 
+export type Camera = {
+  x: number;
+  y: number;
+};
+
 export type Color = {
   r: number;
   g: number;
@@ -73,3 +78,10 @@ export type Layer = {
   isVisible: boolean;
   shapes: UnknownShape[];
 };
+
+export type Point = {
+  x: number;
+  y: number;
+};
+
+export type SelectedShapeType = MetaShapeType | "None";

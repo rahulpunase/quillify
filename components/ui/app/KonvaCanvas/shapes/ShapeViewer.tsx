@@ -1,7 +1,6 @@
 import { useStorage } from "@/liveblocks.config";
 import React, { memo } from "react";
 import Rectangle from "./Rect";
-import { RectangleLayer, ToolSelectedType } from "@/store/canvas";
 import { Layer } from "react-konva";
 import { LayerId, UnknownShape } from "../types";
 
@@ -18,11 +17,10 @@ const ShapeRenderer = ({ layerId }: { layerId: LayerId }) => {
   return layer.shapes.map((shape) => (
     <ShapeSelector key={shape.id} shape={shape} />
   ));
-  return null;
 };
 
 const LayerRenderer = memo(() => {
-  const layerIds = useStorage((root) => root.layerIds);
+  const layerIds = useStorage((root) => root.layerIds ?? []);
   const layers = useStorage((root) => root.layers);
 
   return layerIds.map((layerId) => {

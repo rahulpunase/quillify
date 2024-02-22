@@ -85,12 +85,12 @@ const SelectLayerButton = ({ isSelected, onSelect }) => {
 };
 
 const Toolbar = () => {
-  const { state, setCanvasState } = useCanvasStore();
+  const { selectedShape, setSelectedShape } = useCanvasStore();
   const history = useHistory();
   const canUndo = useCanUndo();
   const canRedo = useCanRedo();
 
-  const layerIds = useStorage((root) => root.layerIds);
+  const layerIds = useStorage((root) => root.layerIds ?? []);
   const selectedLayerMap = useStorage((root) => root.selectedLayerMap);
 
   const changeLayerVisibility = useMutation(({ storage }, layerId) => {
@@ -129,15 +129,9 @@ const Toolbar = () => {
   return (
     <div className="absolute top-[50%] translate-y-[-50%] left-2 flex flex-col gap-y-4 justify-center">
       <div className="bg-white rounded-sm shadow-sm p-3 flex flex-col gap-y-3">
-        <ToolButton
+        {/* <ToolButton
           label="Select"
-          isActive={
-            state.mode === CanvasSelectedMode.None ||
-            state.mode === CanvasSelectedMode.Translating ||
-            state.mode === CanvasSelectedMode.Selection ||
-            state.mode === CanvasSelectedMode.Pressing ||
-            state.mode === CanvasSelectedMode.Resizing
-          }
+          isActive={false}
           isDisabled={false}
           Icon={MousePointer2}
           onClick={() =>
@@ -145,23 +139,15 @@ const Toolbar = () => {
               mode: CanvasSelectedMode.None,
             })
           }
-        />
+        /> */}
         <ToolButton
           label="Text"
-          isActive={
-            state.mode === CanvasSelectedMode.Inserting &&
-            state.toolSelectedType === ToolSelectedType.Text
-          }
+          isActive={selectedShape === "Text"}
           isDisabled={false}
           Icon={Type}
-          onClick={() =>
-            setCanvasState({
-              mode: CanvasSelectedMode.Inserting,
-              toolSelectedType: ToolSelectedType.Text,
-            })
-          }
+          onClick={() => setSelectedShape("Text")}
         />
-        <ToolButton
+        {/* <ToolButton
           label="Sticky Note"
           isActive={
             state.mode === CanvasSelectedMode.Inserting &&
@@ -170,52 +156,29 @@ const Toolbar = () => {
           isDisabled={false}
           Icon={StickyNote}
           onClick={() =>
-            setCanvasState({
-              mode: CanvasSelectedMode.Inserting,
-              toolSelectedType: ToolSelectedType.Note,
-            })
+            setSelectedShape("")
           }
-        />
+        /> */}
         <ToolButton
           label="Square"
-          isActive={
-            state.mode === CanvasSelectedMode.Inserting &&
-            state.toolSelectedType === ToolSelectedType.Rectangle
-          }
+          isActive={selectedShape === "Rectangle"}
           isDisabled={false}
           Icon={Square}
-          onClick={() =>
-            setCanvasState({
-              mode: CanvasSelectedMode.Inserting,
-              toolSelectedType: ToolSelectedType.Rectangle,
-            })
-          }
+          onClick={() => setSelectedShape("Rectangle")}
         />
         <ToolButton
           label="Circle"
-          isActive={
-            state.mode === CanvasSelectedMode.Inserting &&
-            state.toolSelectedType === ToolSelectedType.Ellipse
-          }
+          isActive={selectedShape === "Circle"}
           isDisabled={false}
           Icon={Circle}
-          onClick={() =>
-            setCanvasState({
-              mode: CanvasSelectedMode.Inserting,
-              toolSelectedType: ToolSelectedType.Ellipse,
-            })
-          }
+          onClick={() => setSelectedShape("Circle")}
         />
         <ToolButton
           label="Pencil"
-          isActive={state.mode === CanvasSelectedMode.Pencil}
+          isActive={selectedShape === "Path"}
           isDisabled={false}
           Icon={Pencil}
-          onClick={() =>
-            setCanvasState({
-              mode: CanvasSelectedMode.Pencil,
-            })
-          }
+          onClick={() => setSelectedShape("Path")}
         />
       </div>
       <div className="bg-white rounded-sm shadow-sm p-3 flex flex-col gap-y-3">
