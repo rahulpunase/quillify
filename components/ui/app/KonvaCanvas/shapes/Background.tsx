@@ -1,6 +1,6 @@
 import useCanvasStore from "@/store/canvas";
 import React, { memo } from "react";
-import { Layer, Rect } from "react-konva";
+import { Layer, Rect, Text } from "react-konva";
 
 const DISTANCE = 100;
 

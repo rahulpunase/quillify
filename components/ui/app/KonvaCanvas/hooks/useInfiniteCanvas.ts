@@ -1,17 +1,15 @@
-import { useEffect, useRef } from "react";
-import useStateWithRef from "./useStateWithRef";
-import useCanvasStore from "@/store/canvas";
-import useListeners from "./useListeners";
-import { KonvaEventObject } from "konva/lib/Node";
+import useCanvasStore from '@/store/canvas';
+import { useEffect, useRef } from 'react';
+
+import useListeners from './useListeners';
+import useStateWithRef from './useStateWithRef';
 
 const useInfiniteCanvas = () => {
-  const { setCamera, camera } = useCanvasStore();
+  const { setCamera, setDimension, setSelectedShape, setDownKeys, setUpKeys } = useCanvasStore();
 
-  const [isSpacePressed, isSpacePressedRef, setIsSpacePressed] =
-    useStateWithRef<boolean>(false);
+  const [isSpacePressed, isSpacePressedRef, setIsSpacePressed] = useStateWithRef<boolean>(false);
 
-  const [isPointerPressed, isPointerPressedRef, setIsPointerPressed] =
-    useStateWithRef<boolean>(false);
+  const [isPointerPressed, isPointerPressedRef, setIsPointerPressed] = useStateWithRef<boolean>(false);
 
   const updatedCamera = useRef({
     x: 0,
@@ -24,31 +22,28 @@ const useInfiniteCanvas = () => {
   });
 
   useListeners((attach) => {
-    attach<PointerEvent>("onPointerUp", () => {
+    attach<PointerEvent>('onPointerUp', (...args) => {
+      const { camera } = useCanvasStore.getState();
+      updatedCamera.current = camera;
       setIsPointerPressed(false);
-      updatedCamera.current = {
-        x: camera.x,
-        y: camera.y,
-      };
     });
 
-    attach<PointerEvent>("onPointerDown", (e) => {
+    attach<PointerEvent>('onPointerDown', (e) => {
       setIsPointerPressed(true);
       if (isSpacePressedRef.current) {
         firstOnDownPoints.current = {
           x: e.evt.clientX,
           y: e.evt.clientY,
         };
-        // setSelectedShape("None");
+        setSelectedShape('None');
       }
     });
 
-    attach<PointerEvent>("onPointerMove", (e) => {
+    attach<PointerEvent>('onPointerMove', (e) => {
+      const { downKeys } = useCanvasStore.getState();
       if (isSpacePressedRef.current && isPointerPressedRef.current) {
-        const newX =
-          updatedCamera.current.x + e.evt.clientX - firstOnDownPoints.current.x;
-        const newY =
-          updatedCamera.current.y + e.evt.clientY - firstOnDownPoints.current.y;
+        const newX = updatedCamera.current.x + e.evt.clientX - firstOnDownPoints.current.x;
+        const newY = updatedCamera.current.y + e.evt.clientY - firstOnDownPoints.current.y;
 
         setCamera({
           x: newX,
@@ -60,29 +55,33 @@ const useInfiniteCanvas = () => {
 
   useEffect(() => {
     const onKeyDown = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
+      setDownKeys(e.code);
+      if (e.code === 'Space') {
         setIsSpacePressed(true);
       }
     };
 
     const onKeyUp = (e: KeyboardEvent) => {
-      if (e.code === "Space") {
+      setUpKeys(e.code);
+      if (e.code === 'Space') {
         setIsSpacePressed(false);
       }
+      const { camera } = useCanvasStore.getState();
+      updatedCamera.current = camera;
     };
 
-    // const onResize = () => {
-    //   setDimension();
-    // };
+    const onResize = () => {
+      setDimension();
+    };
 
-    document.addEventListener("keydown", onKeyDown);
-    document.addEventListener("keyup", onKeyUp);
-    // window.addEventListener("resize", onResize);
+    document.addEventListener('keydown', onKeyDown);
+    document.addEventListener('keyup', onKeyUp);
+    window.addEventListener('resize', onResize);
 
     return () => {
-      document.removeEventListener("keydown", onKeyDown);
-      document.removeEventListener("keyup", onKeyUp);
-      // window.removeEventListener("resize", onResize);
+      document.removeEventListener('keydown', onKeyDown);
+      document.removeEventListener('keyup', onKeyUp);
+      window.removeEventListener('resize', onResize);
     };
   }, []);
 

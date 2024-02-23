@@ -18,7 +18,7 @@ const NewBoardButton = ({ view }: { view: DashboardView }) => {
         disabled={!selectedOrgId}
         onClick={() => setOpenModal("new-board")}
         className={cn(
-          "disabled:cursor-not-allowed",
+          "disabled:cursor-not-allowed transition animate-in fade-in",
           !isListType &&
             "bg-blue-600 w-[230px] rounded-md h-[280px] flex justify-center items-center hover:bg-blue-500 transition",
           isListType && "flex flex-row gap-4 items-center group"

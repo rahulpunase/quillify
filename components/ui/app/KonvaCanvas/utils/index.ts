@@ -10,14 +10,6 @@ import { nanoid } from "nanoid";
 
 export const DEFAULT_LAYER_ID = "DEFAULT";
 
-export function getColor(r: number, g: number, b: number): Color {
-  return {
-    r,
-    g,
-    b,
-  };
-}
-
 export function pointerEventToCanvasPoint(e: PointerEvent, camera: Camera) {
   return {
     x: Math.round(e.clientX) - camera.x,
@@ -27,12 +19,13 @@ export function pointerEventToCanvasPoint(e: PointerEvent, camera: Camera) {
 
 export function drawShape(
   selectedShapeType: SelectedShapeType,
-  position: Point,
+  startPoint: Point,
+  endPoint: Point,
   fill: Color,
   stroke: Color
 ): UnknownShape {
   if (selectedShapeType === "Rectangle") {
-    return drawRectangle(position, fill, stroke);
+    return drawRectangle(startPoint, endPoint, fill, stroke);
   }
 
   if (selectedShapeType === "Circle") {
@@ -42,7 +35,8 @@ export function drawShape(
 }
 
 export function drawRectangle(
-  position,
+  startPoint: Point,
+  endPoint: Point,
   fill: Color,
   stroke: Color
 ): Shape<"Rectangle"> {
@@ -51,14 +45,15 @@ export function drawRectangle(
     id: shapeId,
     type: "Rectangle",
     config: {
-      x: position.x,
-      y: position.y,
+      x: startPoint.x,
+      y: startPoint.y,
       fill: fill,
-      height: 100,
-      width: 100,
+      height: endPoint.y,
+      width: endPoint.x,
       isDraggable: true,
       isDragging: false,
       stroke: stroke,
+      roundedCorners: 4,
     },
   };
   return shape;

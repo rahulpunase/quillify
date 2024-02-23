@@ -1,11 +1,5 @@
-import {
-  Camera,
-  Color,
-  MetaShapeType,
-  Point,
-  SelectedShapeType,
-} from "@/components/ui/app/KonvaCanvas/types";
-import { create } from "zustand";
+import { Camera, Color, Point, SelectedShapeType } from '@/components/ui/app/KonvaCanvas/types';
+import { create } from 'zustand';
 
 type CanvasStore = {
   selectedShape: SelectedShapeType;
@@ -14,16 +8,24 @@ type CanvasStore = {
   camera: Camera;
   setCamera: (camera: Camera) => void;
 
-  lastColor: Color;
-  setLastColor: (color: Color) => void;
+  strokeColor: Color;
+  fill: Color;
+  setColor: (param: { strokeColor?: Color; fill?: Color }) => void;
 
   dimension: Dimension;
   setDimension: () => void;
+
+  scale: number;
+  setScale: (scale: number) => void;
 
   dragStartPoint: Point;
   isDragging: boolean;
   onDragStart: (startPoint: Point) => void;
   onDragEnd: (endPoint: Point) => void;
+
+  downKeys: string[];
+  setDownKeys: (key: string) => void;
+  setUpKeys: (key: string) => void;
 };
 
 export type Dimension = {
@@ -32,7 +34,7 @@ export type Dimension = {
 };
 
 const useCanvasStore = create<CanvasStore>()((set) => ({
-  selectedShape: "None",
+  selectedShape: 'None',
   setSelectedShape: (shape: SelectedShapeType) =>
     set(() => ({
       selectedShape: shape,
@@ -42,16 +44,6 @@ const useCanvasStore = create<CanvasStore>()((set) => ({
   setCamera: (camera: Camera) =>
     set(() => ({
       camera,
-    })),
-
-  lastColor: {
-    r: 0,
-    b: 0,
-    g: 0,
-  },
-  setLastColor: (color: Color) =>
-    set(() => ({
-      lastColor: color,
     })),
 
   dimension: {
@@ -76,6 +68,50 @@ const useCanvasStore = create<CanvasStore>()((set) => ({
       dragStartPoint: point,
     })),
   onDragEnd: (point) => set(() => ({})),
+
+  scale: 1,
+  setScale: (scale) =>
+    set(() => ({
+      scale,
+    })),
+
+  strokeColor: '#222222',
+  fill: '#222222',
+  setColor: ({ strokeColor, fill }) =>
+    set(() => ({
+      strokeColor: strokeColor ?? '#222222',
+      fill: fill ?? '#222222',
+    })),
+
+  downKeys: [],
+  setDownKeys: (key: string) =>
+    set(({ downKeys }) => {
+      const allKeys = [...downKeys];
+      const alreadyAvailableKeyIndex = allKeys.findIndex((_key) => _key === key);
+      if (alreadyAvailableKeyIndex > -1) {
+        return {
+          downKeys: allKeys,
+        };
+      }
+      allKeys.push(key);
+      return {
+        downKeys: allKeys,
+      };
+    }),
+  setUpKeys: (key: string) =>
+    set(({ downKeys }) => {
+      const allKeys = [...downKeys];
+      const alreadyAvailableKeyIndex = allKeys.findIndex((_key) => _key === key);
+      if (alreadyAvailableKeyIndex > -1) {
+        allKeys.splice(alreadyAvailableKeyIndex, 1);
+        return {
+          downKeys: allKeys,
+        };
+      }
+      return {
+        downKeys: allKeys,
+      };
+    }),
 }));
 
 export default useCanvasStore;

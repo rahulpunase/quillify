@@ -76,7 +76,7 @@ const DashboardView = () => {
         <SideBar />
         <div className="flex-1 flex flex-col">
           <Header />
-          <div className="flex-grow bg-zinc-100">
+          <div className="flex-grow bg-zinc-100 animate-in fade-in transition">
             <BoardContainer view="card" />
           </div>
         </div>

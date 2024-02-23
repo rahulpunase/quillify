@@ -1,11 +1,11 @@
-import { useStorage } from "@/liveblocks.config";
-import React, { memo } from "react";
-import Rectangle from "./Rect";
-import { Layer } from "react-konva";
-import { LayerId, UnknownShape } from "../types";
+import React, { memo } from 'react';
+import Rectangle from './Rect';
+import { useStorage } from '@/liveblocks.config';
+import { Layer } from 'react-konva';
+import { LayerId, UnknownShape } from '../types';
 
 const ShapeSelector = ({ shape }: { shape: UnknownShape }) => {
-  if (shape.type === "Rectangle") {
+  if (shape.type === 'Rectangle') {
     return <Rectangle config={shape.config} />;
   }
   return null;
@@ -14,9 +14,7 @@ const ShapeSelector = ({ shape }: { shape: UnknownShape }) => {
 const ShapeRenderer = ({ layerId }: { layerId: LayerId }) => {
   const layers = useStorage((root) => root.layers);
   const layer = layers.get(layerId);
-  return layer.shapes.map((shape) => (
-    <ShapeSelector key={shape.id} shape={shape} />
-  ));
+  return layer.shapes.map((shape) => <ShapeSelector key={shape.id} shape={shape} />);
 };
 
 const LayerRenderer = memo(() => {

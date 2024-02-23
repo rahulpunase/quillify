@@ -88,7 +88,7 @@ const SideBar = () => {
               {!members && <Skeleton className="w-full h-4" />}
               {members && members.length && (
                 <button
-                  className="flex-1 flex justify-start"
+                  className="flex-1 flex justify-start animate-in fade-in transition"
                   onClick={() => setOpenModal("organization-members")}
                 >
                   {members.length} user

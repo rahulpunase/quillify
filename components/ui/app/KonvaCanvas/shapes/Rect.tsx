@@ -1,12 +1,11 @@
-"use client";
+'use client';
 
-import React, { useEffect, useRef, useState } from "react";
-import { Rect, Transformer } from "react-konva";
-import { useMutation } from "@/liveblocks.config";
-import { RectangleConfig } from "../types";
+import { RectConfig } from 'konva/lib/shapes/Rect';
+import React, { useEffect, useRef, useState } from 'react';
+import { Rect, Transformer } from 'react-konva';
 
 type RectangleProps = {
-  config: RectangleConfig;
+  config: RectConfig;
 };
 
 const Rectangle = ({ config }: RectangleProps) => {
@@ -24,17 +23,11 @@ const Rectangle = ({ config }: RectangleProps) => {
     }
   }, [rectRef, tRef, selected]);
 
-  // const onDragMove = useMutation(({ storage }, e) => {
-  //   const layers = storage.get("layers");
-  //   const layer = layers.get(layerId);
-  //   layer.update({
-  //     ...layer,
-  //     x: e.evt.clientX,
-  //     y: e.evt.clientY,
-  //   });
-  // }, []);
-
   const onDragMove = () => {};
+  const onTransformEnd = (e) => {
+    console.log(e);
+  };
+
   return (
     <>
       <Rect
@@ -43,17 +36,19 @@ const Rectangle = ({ config }: RectangleProps) => {
         ref={rectRef}
         width={width}
         height={height}
-        fill="#000000"
+        fill={config.fill}
+        stroke={config.stroke}
         onClick={() => setSelected(!selected)}
         draggable
-        onTransform={(e) => console.log("Transforming", e)}
+        onTransform={(e) => console.log('Transforming', e)}
         onDragMove={onDragMove}
+        onTransformEnd={onTransformEnd}
+        // cornerRadius={6}
       />
       <Transformer
         ref={tRef}
         flipEnabled={false}
         boundBoxFunc={(oldBox, newBox) => {
-          // limit resize
           if (Math.abs(newBox.width) < 5 || Math.abs(newBox.height) < 5) {
             return oldBox;
           }

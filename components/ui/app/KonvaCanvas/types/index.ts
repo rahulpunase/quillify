@@ -8,11 +8,7 @@ export type Camera = {
   y: number;
 };
 
-export type Color = {
-  r: number;
-  g: number;
-  b: number;
-};
+export type Color = string;
 
 export type RectangleConfig = {
   x: number;
@@ -24,6 +20,7 @@ export type RectangleConfig = {
   value?: string;
   fill: Color;
   stroke: Color;
+  roundedCorners: number | number[];
 };
 
 export type CircleConfig = {

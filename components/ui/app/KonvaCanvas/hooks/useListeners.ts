@@ -1,5 +1,5 @@
 import { KonvaEventObject } from "konva/lib/Node";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { KonvaNodeEvents } from "react-konva";
 
 type FnToAttach = <T>(e: KonvaEventObject<T>) => void;

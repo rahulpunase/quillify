@@ -29,7 +29,7 @@ const Info = ({ boardId }: InfoProps) => {
   });
 
   return (
-    <div className="absolute top-2 left-2 p-1 shadow-md bg-white rounded-sm">
+    <div className="absolute top-2 left-2 p-1 shadow-md bg-white rounded-sm animate-in slide-in-from-top-0 transition">
       <div className="flex flex-row items-center">
         <TooltipWrapper content="Dashboard">
           <Button asChild variant="ghost">
@@ -44,9 +44,15 @@ const Info = ({ boardId }: InfoProps) => {
           </Button>
         </TooltipWrapper>
         <Separator />
-        <Button asChild variant="ghost" className="cursor-pointer">
-          <div>{board?.name}</div>
-        </Button>
+        {board && board.name && (
+          <Button
+            asChild
+            variant="ghost"
+            className="cursor-pointer animate-in fade-in transition"
+          >
+            <div>{board.name}</div>
+          </Button>
+        )}
       </div>
     </div>
   );

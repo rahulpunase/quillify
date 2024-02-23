@@ -51,7 +51,7 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
   if (view === "card") {
     return (
       <Link href={`/board/${board._id}/?orgId=${selectedOrgId}`}>
-        <div className="w-[230px] group rounded-md h-[280px] hover:shadow-lg p-3 transition border bg-zinc-50 flex flex-col justify-between cursor-pointer relative">
+        <div className="w-[230px] group rounded-md h-[280px] hover:shadow-lg  p-3 border bg-zinc-50 flex flex-col justify-between cursor-pointer relative transition animate-in fade-in">
           <DropDownMenuForCard
             deleteBoard={() =>
               deleteBoard({
@@ -96,7 +96,7 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
 
   return (
     <Link href={`/board/${board._id}/?orgId=${selectedOrgId}`}>
-      <div className="flex flex-row w-full">
+      <div className="flex flex-row w-full transition animate-in fade-in">
         <div className="w-[70%]">
           <div></div>
           <div>
