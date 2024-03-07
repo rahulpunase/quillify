@@ -1,26 +1,21 @@
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogClose,
-  DialogDescription,
-  DialogHeader,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import useModalStore from "@/store/modals";
-import useOrganizationStore from "@/store/organization";
-import { useMutation, useQuery } from "convex/react";
-import { randomBytes } from "crypto";
-import { Copy, CopyCheck } from "lucide-react";
-import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import useGetOrgId from '@/lib/hooks/useGetOrgId';
+import useModalStore from '@/store/modals';
+import useOrganizationStore from '@/store/organization';
+import { useMutation, useQuery } from 'convex/react';
+import { randomBytes } from 'crypto';
+import { Copy, CopyCheck } from 'lucide-react';
+import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 const InviteUserPopup = () => {
   const { setOpenModal } = useModalStore();
-  const { selectedOrgId } = useOrganizationStore();
-  const [inviteUrl, setInviteUrl] = useState("");
+  const selectedOrgId = useGetOrgId();
+  const [inviteUrl, setInviteUrl] = useState('');
   const [isLinkCopied, setIsLinkCopied] = useState(false);
 
   const getOrganization = useQuery(api.organization.query.getAll);
@@ -33,23 +28,19 @@ const InviteUserPopup = () => {
 
   useEffect(() => {
     if (!inviteUrl) {
-      const organization = getOrganization?.find(
-        (org) => org._id === selectedOrgId
-      );
+      const organization = getOrganization?.find((org) => org._id === selectedOrgId);
       if (!organization || !organization.inviteId) return;
       setInviteUrl(generateLink(organization.inviteId));
     }
   }, [getOrganization, selectedOrgId]);
 
-  const updateInviteUrl = useMutation(
-    api.organization.mutation.updateInviteUrl
-  );
+  const updateInviteUrl = useMutation(api.organization.mutation.updateInviteUrl);
 
   const generateLinkClickHandler = async () => {
-    const randomId = randomBytes(20).toString("hex");
+    const randomId = randomBytes(20).toString('hex');
     const inviteUrl = generateLink(randomId);
     await updateInviteUrl({
-      id: selectedOrgId as Id<"organizations">,
+      id: selectedOrgId as Id<'organizations'>,
       inviteId: randomId,
     });
     setInviteUrl(inviteUrl);
@@ -63,26 +54,17 @@ const InviteUserPopup = () => {
   };
 
   return (
-    <Dialog open onOpenChange={() => setOpenModal("")}>
+    <Dialog open onOpenChange={() => setOpenModal('')}>
       <DialogContent>
         <DialogHeader>Invite members to the organization</DialogHeader>
         <DialogDescription>
-          Generate an invite url or send mail to the users you want to invite
-          with the generate url link
+          Generate an invite url or send mail to the users you want to invite with the generate url link
         </DialogDescription>
 
         <div className="flex flex-row items-end gap-x-2">
           <Input readOnly value={inviteUrl} />
-          <Button
-            variant="outline"
-            onClick={copyLinkToClipBoard}
-            disabled={!inviteUrl}
-          >
-            {isLinkCopied ? (
-              <CopyCheck className="h-4 w-4" />
-            ) : (
-              <Copy className="h-4 w-4" />
-            )}
+          <Button variant="outline" onClick={copyLinkToClipBoard} disabled={!inviteUrl}>
+            {isLinkCopied ? <CopyCheck className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
           </Button>
         </div>
         <Button onClick={generateLinkClickHandler}>Generate invite link</Button>

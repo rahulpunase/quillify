@@ -1,20 +1,16 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogFooter } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { api } from "@/convex/_generated/api";
-import { Id } from "@/convex/_generated/dataModel";
-import useOrganizationStore from "@/store/organization";
-import { useMutation } from "convex/react";
-import React from "react";
-import { useForm } from "react-hook-form";
+'use client';
+
+import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogFooter } from '@/components/ui/dialog';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import useGetOrgId from '@/lib/hooks/useGetOrgId';
+import useOrganizationStore from '@/store/organization';
+import { useMutation } from 'convex/react';
+import React from 'react';
+import { useForm } from 'react-hook-form';
 
 type NewBoard = {
   name: string;
@@ -29,13 +25,13 @@ const CreateBoardPopup = ({
 }) => {
   const form = useForm<NewBoard>();
   const mutation = useMutation(api.boards.mutation.createBoard);
-  const { selectedOrgId } = useOrganizationStore();
+  const selectedOrgId = useGetOrgId();
 
   const createBoardHandler = (values: NewBoard) => {
     mutation({
       name: values.name,
-      orgId: selectedOrgId as Id<"organizations">,
-      type: "",
+      orgId: selectedOrgId as Id<'organizations'>,
+      type: '',
     });
     onBoardCreatedSuccessfully();
   };
@@ -53,7 +49,7 @@ const CreateBoardPopup = ({
                   <FormLabel>Board Name:</FormLabel>
                   <FormControl>
                     <Input
-                      {...form.register("name", {
+                      {...form.register('name', {
                         required: true,
                         maxLength: 30,
                       })}
@@ -65,10 +61,7 @@ const CreateBoardPopup = ({
               )}
             />
             <DialogFooter className="mt-4">
-              <Button
-                type="submit"
-                disabled={!!Object.keys(form.formState.errors).length}
-              >
+              <Button type="submit" disabled={!!Object.keys(form.formState.errors).length}>
                 Create Board
               </Button>
             </DialogFooter>

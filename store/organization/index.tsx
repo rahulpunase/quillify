@@ -1,4 +1,4 @@
-import { create } from "zustand";
+import { create } from 'zustand';
 
 type OrganizationStore = {
   selectedOrgId: string;
@@ -6,7 +6,7 @@ type OrganizationStore = {
 };
 
 const useOrganizationStore = create<OrganizationStore>()((set) => ({
-  selectedOrgId: "",
+  selectedOrgId: '',
   setSelectedOrgId: (id: string) => set(() => ({ selectedOrgId: id })),
 }));
 

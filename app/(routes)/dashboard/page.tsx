@@ -1,8 +1,9 @@
-import React from "react";
-import DashboardView from "./_components/DashboardView";
+import React from 'react';
+
+import BoardContainer from './_components/BoardContainer';
 
 const DashboardPage = () => {
-  return <DashboardView />;
+  return <BoardContainer view="card" />;
 };
 
 export default DashboardPage;

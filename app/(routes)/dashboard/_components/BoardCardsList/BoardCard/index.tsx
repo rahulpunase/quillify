@@ -1,17 +1,18 @@
-import React from "react";
-import { Board } from "..";
-import { MoreHorizontal, Star } from "lucide-react";
+import { api } from '@/convex/_generated/api';
+import useGetOrgId from '@/lib/hooks/useGetOrgId';
+import { cn } from '@/lib/utils';
+import { DashboardView } from '@/store/dashboard';
+import useOrganizationStore from '@/store/organization';
+import useUserStore from '@/store/user';
+import { useMutation } from 'convex/react';
+import { format } from 'date-fns';
+import { MoreHorizontal, Star } from 'lucide-react';
+import Link from 'next/link';
+import React from 'react';
+import { toast } from 'sonner';
 
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { cn } from "@/lib/utils";
-import Link from "next/link";
-import useOrganizationStore from "@/store/organization";
-import { toast } from "sonner";
-import { DashboardView } from "@/store/dashboard";
-import DropDownMenuForCard from "./DropDownMenuForCard";
-import { format } from "date-fns";
-import useUserStore from "@/store/user";
+import { Board } from '..';
+import DropDownMenuForCard from './DropDownMenuForCard';
 
 type BoardCardType = {
   view: DashboardView;
@@ -23,7 +24,7 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
   const deleteBoard = useMutation(api.boards.mutation.deleteBoard);
   const starBoard = useMutation(api.boards.mutation.starBoard);
   const { user } = useUserStore();
-  const { selectedOrgId } = useOrganizationStore();
+  const selectedOrgId = useGetOrgId();
 
   const isCreatedByYou = user?.userId === createdBy.userId;
 
@@ -32,14 +33,14 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
     const here = await starBoard({
       id: board._id,
     });
-    toast.info(here ? "Board starred!" : "Board removed from starred");
+    toast.info(here ? 'Board starred!' : 'Board removed from starred');
   };
 
-  const dateFormatted = format(board._creationTime, "MMM dd");
+  const dateFormatted = format(board._creationTime, 'MMM dd');
 
   const RenderCreatedBy = () => {
     if (isCreatedByYou) {
-      return "ME";
+      return 'ME';
     }
     return (
       <Link href="/profile">
@@ -48,7 +49,7 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
     );
   };
 
-  if (view === "card") {
+  if (view === 'card') {
     return (
       <Link href={`/board/${board._id}/?orgId=${selectedOrgId}`}>
         <div className="w-[230px] group rounded-md h-[280px] hover:shadow-lg  p-3 border bg-zinc-50 flex flex-col justify-between cursor-pointer relative transition animate-in fade-in">
@@ -69,22 +70,15 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
           <div className="flex-1"></div>
           <div className="h-[40px] pt-1 w-full flex flex-row justify-between items-start">
             <div className="flex flex-col">
-              <div className="font-light max-w-[90%] overflow-hidden text-ellipsis whitespace-nowrap">
-                {board.name}
-              </div>
-              <div className="text-xs font-light text-zinc-500">
-                Created at: {dateFormatted}{" "}
-              </div>
+              <div className="font-light max-w-[90%] overflow-hidden text-ellipsis whitespace-nowrap">{board.name}</div>
+              <div className="text-xs font-light text-zinc-500">Created at: {dateFormatted} </div>
             </div>
-            <button
-              className="flex h-full items-center"
-              onClick={onStarHandlerClick}
-            >
+            <button className="flex h-full items-center" onClick={onStarHandlerClick}>
               <Star
                 className={cn(
-                  "w-4 h-4",
-                  board.isStarred ? "fill-blue-600" : "fill-zinc-200",
-                  board.isStarred ? "text-blue-600" : "text-zinc-200"
+                  'w-4 h-4',
+                  board.isStarred ? 'fill-blue-600' : 'fill-zinc-200',
+                  board.isStarred ? 'text-blue-600' : 'text-zinc-200',
                 )}
               />
             </button>
@@ -101,24 +95,19 @@ const BoardCard = ({ board, view, createdBy }: BoardCardType) => {
           <div></div>
           <div>
             <div>{board.name}</div>
-            <div className="text-xs font-light text-zinc-500">
-              Created at: {dateFormatted}
-            </div>
+            <div className="text-xs font-light text-zinc-500">Created at: {dateFormatted}</div>
           </div>
         </div>
         <div className="flex-1 flex justify-center">
           <RenderCreatedBy />
         </div>
         <div className="flex-1 flex justify-center flex-row gap-x-4 items-center">
-          <button
-            className="flex h-full items-center"
-            onClick={onStarHandlerClick}
-          >
+          <button className="flex h-full items-center" onClick={onStarHandlerClick}>
             <Star
               className={cn(
-                "w-4 h-4",
-                board.isStarred ? "fill-blue-600" : "fill-zinc-200",
-                board.isStarred ? "text-blue-600" : "text-zinc-200"
+                'w-4 h-4',
+                board.isStarred ? 'fill-blue-600' : 'fill-zinc-200',
+                board.isStarred ? 'text-blue-600' : 'text-zinc-200',
               )}
             />
           </button>

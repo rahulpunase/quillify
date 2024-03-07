@@ -1,13 +1,13 @@
-import { Id } from "@/convex/_generated/dataModel";
-import React from "react";
-import BoardCard from "./BoardCard";
-import useDashboardStore from "@/store/dashboard";
-import { useQuery } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import useOrganizationStore from "@/store/organization";
+import { api } from '@/convex/_generated/api';
+import { Id } from '@/convex/_generated/dataModel';
+import useGetOrgId from '@/lib/hooks/useGetOrgId';
+import useDashboardStore from '@/store/dashboard';
+import { useQuery } from 'convex/react';
+
+import BoardCard from './BoardCard';
 
 export type Board = {
-  _id: Id<"boards">;
+  _id: Id<'boards'>;
   _creationTime: number;
   thumbnail?: string | undefined;
   name: string;
@@ -20,10 +20,10 @@ export type Board = {
 
 const BoardCardList = ({ boards }: { boards?: Board[] }) => {
   const { selectedView } = useDashboardStore();
-  const { selectedOrgId } = useOrganizationStore();
+  const selectedOrgId = useGetOrgId();
 
   const members = useQuery(api.members.query.getAllMembersFromOrg, {
-    orgId: selectedOrgId as Id<"organizations">,
+    orgId: selectedOrgId as Id<'organizations'>,
   });
 
   return boards?.map((board) => (
