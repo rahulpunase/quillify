@@ -1,5 +1,7 @@
 'use client';
 
+import useCanvasStore from '@/store/canvas';
+import { KonvaEventObject } from 'konva/lib/Node';
 import { RectConfig } from 'konva/lib/shapes/Rect';
 import React, { useEffect, useRef, useState } from 'react';
 import { Rect, Transformer } from 'react-konva';
@@ -9,6 +11,7 @@ type RectangleProps = {
 };
 
 const Rectangle = ({ config }: RectangleProps) => {
+  const { setMousePointOnShape, setMode } = useCanvasStore();
   const { fill, height, width, x, y } = config;
   const [selected, setSelected] = useState(false);
   const rectRef = useRef();
@@ -28,6 +31,20 @@ const Rectangle = ({ config }: RectangleProps) => {
     console.log(e);
   };
 
+  const onClickHandler = (e: KonvaEventObject<MouseEvent>) => {
+    e.evt.stopPropagation();
+    setSelected(!selected);
+    setMode('selection');
+  };
+
+  const onTransformHandler = () => {
+    setMode('selection');
+  };
+
+  const onDragStartedHandler = () => {
+    setMode('selection');
+  };
+
   return (
     <>
       <Rect
@@ -38,12 +55,16 @@ const Rectangle = ({ config }: RectangleProps) => {
         height={height}
         fill={config.fill}
         stroke={config.stroke}
-        onClick={() => setSelected(!selected)}
+        strokeWidth={config.strokeWidth ?? 2}
+        onClick={onClickHandler}
         draggable
-        onTransform={(e) => console.log('Transforming', e)}
+        onTransform={onTransformHandler}
         onDragMove={onDragMove}
+        onDragStart={onDragStartedHandler}
         onTransformEnd={onTransformEnd}
-        // cornerRadius={6}
+        onTransformStart={() => console.log('started')}
+        onPointerOver={() => setMousePointOnShape(true)}
+        onPointerLeave={() => setMousePointOnShape(false)}
       />
       <Transformer
         ref={tRef}

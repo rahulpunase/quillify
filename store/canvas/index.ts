@@ -1,31 +1,29 @@
-import { Camera, Color, Point, SelectedShapeType } from '@/components/ui/app/KonvaCanvas/types';
+import { Camera, Color, Modes, Point, SelectedShapeType } from '@/components/ui/app/KonvaCanvas/types';
 import { create } from 'zustand';
 
 type CanvasStore = {
   selectedShape: SelectedShapeType;
-  setSelectedShape: (shape: SelectedShapeType) => void;
-
   camera: Camera;
-  setCamera: (camera: Camera) => void;
-
   strokeColor: Color;
   fill: Color;
-  setColor: (param: { strokeColor?: Color; fill?: Color }) => void;
-
   dimension: Dimension;
-  setDimension: () => void;
-
   scale: number;
-  setScale: (scale: number) => void;
-
-  dragStartPoint: Point;
-  isDragging: boolean;
-  onDragStart: (startPoint: Point) => void;
-  onDragEnd: (endPoint: Point) => void;
-
   downKeys: string[];
+  isPointerDown: boolean;
+  mousePointOnShape: boolean;
+  mode: Modes;
+  pointerDownPoints: Point | null;
+
+  setSelectedShape: (shape: SelectedShapeType) => void;
+  setCamera: (camera: Camera) => void;
+  setColor: (param: { strokeColor?: Color; fill?: Color }) => void;
+  setDimension: () => void;
+  setScale: (scale: number) => void;
   setDownKeys: (key: string) => void;
   setUpKeys: (key: string) => void;
+  setIsPointerDown: (bool: boolean, pointerDownPoints: Point) => void;
+  setMousePointOnShape: (bool: boolean) => void;
+  setMode: (mode: Modes) => void;
 };
 
 export type Dimension = {
@@ -35,21 +33,36 @@ export type Dimension = {
 
 const useCanvasStore = create<CanvasStore>()((set) => ({
   selectedShape: 'None',
+  camera: { x: 0, y: 0 },
+  dimension: {
+    width: window.innerWidth,
+    height: window.innerHeight,
+  },
+  dragStartPoint: {
+    x: 0,
+    y: 0,
+  },
+  scale: 1,
+  strokeColor: '#222222',
+  fill: '#535050',
+  downKeys: [],
+  mousePointOnShape: false,
+  isPointerDown: false,
+  mode: 'selection',
+  pointerDownPoints: null,
+  pointerUpPoints: null,
+
   setSelectedShape: (shape: SelectedShapeType) =>
     set(() => ({
       selectedShape: shape,
+      mode: 'insertion',
     })),
 
-  camera: { x: 0, y: 0 },
   setCamera: (camera: Camera) =>
     set(() => ({
       camera,
     })),
 
-  dimension: {
-    width: window.innerWidth,
-    height: window.innerHeight,
-  },
   setDimension: () =>
     set(() => ({
       dimension: {
@@ -58,32 +71,17 @@ const useCanvasStore = create<CanvasStore>()((set) => ({
       },
     })),
 
-  dragStartPoint: {
-    x: 0,
-    y: 0,
-  },
-  isDragging: false,
-  onDragStart: (point) =>
-    set(() => ({
-      dragStartPoint: point,
-    })),
-  onDragEnd: (point) => set(() => ({})),
-
-  scale: 1,
   setScale: (scale) =>
     set(() => ({
       scale,
     })),
 
-  strokeColor: '#222222',
-  fill: '#222222',
   setColor: ({ strokeColor, fill }) =>
     set(() => ({
       strokeColor: strokeColor ?? '#222222',
-      fill: fill ?? '#222222',
+      fill: fill ?? '#535050',
     })),
 
-  downKeys: [],
   setDownKeys: (key: string) =>
     set(({ downKeys }) => {
       const allKeys = [...downKeys];
@@ -98,6 +96,7 @@ const useCanvasStore = create<CanvasStore>()((set) => ({
         downKeys: allKeys,
       };
     }),
+
   setUpKeys: (key: string) =>
     set(({ downKeys }) => {
       const allKeys = [...downKeys];
@@ -112,6 +111,23 @@ const useCanvasStore = create<CanvasStore>()((set) => ({
         downKeys: allKeys,
       };
     }),
+
+  setIsPointerDown: (bool, pointerDownPoints) =>
+    set(() => ({
+      isPointerDown: bool,
+      pointerDownPoints,
+    })),
+
+  setMousePointOnShape: (bool: boolean) =>
+    set(() => ({
+      mousePointOnShape: bool,
+    })),
+
+  setMode: (mode: Modes) =>
+    set(() => ({
+      mode,
+      selectedShape: 'None',
+    })),
 }));
 
 export default useCanvasStore;

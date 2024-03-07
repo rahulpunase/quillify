@@ -6,6 +6,7 @@ import { useEffect, useRef } from 'react';
 
 import canvasCustomEvents from '../services/CanvasCustomEvents';
 import { drawShape, pointerEventToCanvasPoint } from '../utils';
+import useListeners from './useListeners';
 
 const useInitiateKonva = () => {
   const stage = useRef(null);
@@ -20,6 +21,10 @@ const useInitiateKonva = () => {
       cursor: current,
     });
   }, []);
+
+  useListeners((attach) => {
+    attach('onPointerMove', onPointerMove);
+  });
 
   const insertLayer = useMutation(({ storage, setMyPresence }, startPoint, endPoint) => {
     const selectedLayerMap = storage.get('selectedLayerMap');
@@ -77,9 +82,7 @@ const useInitiateKonva = () => {
   useEffect(() => {
     if (!stage.current) return;
     canvasCustomEvents.init(stage.current.attrs.container);
-
     canvasCustomEvents.addEventListener<'ADD_SHAPE'>('ADD_SHAPE', (evt) => {
-      // evt.detail.
       insertLayer(evt.detail.startPoint, evt.detail.endPoint);
     });
   }, [stage]);

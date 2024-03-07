@@ -1,8 +1,8 @@
-import useCanvasStore from "@/store/canvas";
-import React, { memo } from "react";
-import { Layer, Rect, Text } from "react-konva";
+import useCanvasStore from '@/store/canvas';
+import React, { memo } from 'react';
+import { Layer, Rect, Text } from 'react-konva';
 
-const DISTANCE = 100;
+const DISTANCE = 60;
 
 const Background = memo(() => {
   const { dimension, camera } = useCanvasStore();
@@ -18,14 +18,15 @@ const Background = memo(() => {
     for (let j = -stepX; j < rowBoxes - stepX; j++) {
       gridBox.push(
         <Rect
+          key={i + '-' + j}
           x={j * DISTANCE}
           y={i * DISTANCE}
           height={DISTANCE}
           width={DISTANCE}
-          stroke="#bdbbbb"
+          stroke="#cccbcb"
           strokeWidth={2}
           cornerRadius={4}
-        />
+        />,
       );
     }
   }
