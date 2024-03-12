@@ -34,7 +34,9 @@ const AppCanvas = ({ boardId }: AppCanvasProps) => {
   useAddMouseEvents();
 
   const onPointerDownHandler = (e: KonvaEventObject<PointerEvent>) => {
-    listeners.get('onPointerDown')?.forEach((listener) => listener.call(listener, e));
+    if (e.target.attrs.name === 'background') {
+      listeners.get('onPointerDown')?.forEach((listener) => listener.call(listener, e));
+    }
   };
 
   const onPointerMoveHandler = (e: KonvaEventObject<PointerEvent>) => {

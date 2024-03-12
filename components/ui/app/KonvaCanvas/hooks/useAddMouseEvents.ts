@@ -18,7 +18,7 @@ const useAddMouseEvents = () => {
       setIsPointerDown(false, null);
     });
 
-    attach('onPointerCancel', () => {
+    attach('onPointerCancel', (e) => {
       setIsPointerDown(false, null);
     });
   });

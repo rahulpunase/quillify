@@ -48,6 +48,7 @@ const Rectangle = ({ config }: RectangleProps) => {
   return (
     <>
       <Rect
+        name="rect"
         x={x}
         y={y}
         ref={rectRef}
@@ -65,6 +66,9 @@ const Rectangle = ({ config }: RectangleProps) => {
         onTransformStart={() => console.log('started')}
         onPointerOver={() => setMousePointOnShape(true)}
         onPointerLeave={() => setMousePointOnShape(false)}
+        onPointerDown={(e) => {
+          console.log('shape', e);
+        }}
       />
       <Transformer
         ref={tRef}

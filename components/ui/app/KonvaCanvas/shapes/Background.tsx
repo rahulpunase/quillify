@@ -26,6 +26,7 @@ const Background = memo(() => {
           stroke="#cccbcb"
           strokeWidth={2}
           cornerRadius={4}
+          name="background"
         />,
       );
     }
